@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {v4 as uuidv4} from 'uuid';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
+import axios from 'axios'
 
 import "./App.css";
 import AddTask from "./components/AddTask";
@@ -22,6 +23,17 @@ const App = () => {
       completed: true,
     },
   ]);
+
+  useEffect(() => { // verifica se as variaveis selecionadas, dentro do [], mudam, e quando mudar executa o codigo
+    const fetchTasks = async () => {
+        
+       const {data} = await axios.get("https://jsonplaceholder.cypress.io/todos?_limit=10");
+
+       setTasks(data);
+    }
+
+    fetchTasks();
+  }, [/*vazio significa pela primeira vez, funciona como o initState() do Flutter*/]);
 
   const handleTaskAddition = (taskTitle) => {
     const newTask = [... tasks, {
